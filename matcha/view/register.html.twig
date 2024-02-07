@@ -1,0 +1,211 @@
+<!Doctype Html>
+<html>
+<head>
+    <title>Matcha - Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ base_url() }}/css/register.css" type="text/css">
+    <link rel="icon" type="image/png" href="{{ base_url() }}/img/logo.png" />
+    <link rel="stylesheet" href="{{ base_url() }}/css/easy-autocomplete.min.css">
+    <link rel="stylesheet" href="{{ base_url() }}/css/easy-autocomplete.themes.min.css">
+</head>
+<body class="container">
+    <div id="header"></div>
+    <div id="content">
+        <div class="text-center">
+            <h2>Tell us more about you !</h2>
+        </div>
+        <form action="{{ path_for('register') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" class="form-control">
+                    <option {% if old.gender ==  1 %} selected="selected" {% endif %} value="1">Male</option>
+                    <option {% if old.gender ==  2 %} selected="selected" {% endif %} value="2">Female</option>
+                </select>
+                {% if flash.gender %}<small class="text-danger">{{ flash.gender | first}}</small>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="orientation">Sexual Orientation</label>
+                <select id="orientation" name="orientation" class="form-control">
+                    <option {% if old.orientation ==  1 %} selected="selected" {% endif %}value="1">Hetero</option>
+                    <option {% if old.orientation ==  2 %} selected="selected" {% endif %}value="2">Homo</option>
+                    <option {% if old.orientation ==  3 %} selected="selected" {% endif %} value="3">Bi</option>
+                </select>
+                {% if flash.orientation %}<small class="text-danger">{{ flash.orientation | first}}</small>{% endif %}
+            </div>
+            <div id="birth-container" class="form-group form-inline col-xs-12">
+                <label for="birthdate" class="block col-xs-12 col-md-12">Birthdate</label>
+                <div class="birth-wrap col-xs-4 col-md-4">
+                    <select name="day" class="form-control inline col-xs-12">
+                        <option value="">Day</option>
+                        {% for i in 1..31 %}
+                            <option {% if old.day ==  i %}selected="selected"{% endif %} value="{{ i }}">
+                                {% if i <= 9 %}
+                                    0{{ i }}
+                                {% else %}
+                                    {{ i }}
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if flash.day %}<small class="text-danger">{{ flash.day | first}}</small>{% endif %}
+                    {% if flash.birthdate %}<small class="text-danger">{{ flash.birthdate | first}}</small>{% endif %}
+                </div>
+                <div class="birth-wrap col-xs-4 col-md-4">
+                    <select name="month" class="form-control inline">
+                        <option value="">Month</option>
+                        {% for i in 1..12 %}
+                            <option {% if old.month ==  i %}selected="selected"{% endif %} value="{{ i }}">
+                                {% if i <= 9 %}
+                                    0{{ i }}
+                                {% else %}
+                                    {{ i }}
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if flash.month %}<small class="text-danger">{{ flash.month | first}}</small>{% endif %}
+                </div>
+                <div class="birth-wrap col-xs-4 col-md-4">
+                    <select name="year" class="form-control inline">
+                        <option value="">Year</option>
+                        {% for i in 1940.."now" | date("Y") %}
+                            <option {% if old.year ==  i %}selected="selected"{% endif %} value="{{ i }}">
+                                {% if i <= 9 %}
+                                    0{{ i }}
+                                {% else %}
+                                    {{ i }}
+                                {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if flash.year %}<small class="text-danger">{{ flash.year | first}}</small>{% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="bio">Biography</label>
+                <textarea id="bio" name="bio" rows=4 class="form-control">{{ old.bio }}</textarea>
+                {% if flash.bio %}<small class="text-danger">{{ flash.bio | first}}</small>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="hobby">Hobbies</label>
+                <div id="tag-ticket-wrap" class="col-xs-12 col-md-12"></div>
+                <input type="text" id="hobby" class="input form-control"/>
+                <input id="tag" type="hidden" name="tag" value="{{ old.tag }}"/>
+                {% if flash.tag %}<small class="text-danger">{{ flash.tag | first}}</small>{% endif %}
+            </div>
+            <label>Profile Pictures</label>
+            <div class="file-list row col-xs-12">
+                <div class="col-xs-1 col-md-1"></div>
+                <div class="form-group col-xs-2 col-md-2">
+                    <div class="input-group form-control">
+                        <label class="input-group-btn col-xs-12 col-md-12">
+                                <input id="file" name="file_1" type="file" class="file-input">
+                            <div id="preview-file" class="upload-div col-xs-12 col-md-12 text-center">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-xs-2 col-md-2">
+                    <div class="input-group form-control">
+                        <label class="input-group-btn col-xs-12 col-md-12">
+                            <input id="file_2" name="file_2" type="file" class="file-input">
+                            <div id="preview-file_2" class="upload-div col-xs-12 col-md-12 text-center">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-xs-2 col-md-2">
+                    <div class="input-group form-control">
+                        <label class="input-group-btn col-xs-12 col-md-12">
+                            <input id="file_3" name="file_3"type="file" class="file-input">
+                            <div id="preview-file_3" class="upload-div col-xs-12 col-md-12 text-center">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-xs-2 col-md-2">
+                    <div class="input-group form-control">
+                        <label class="input-group-btn col-xs-12 col-md-12">
+                            <input id="file_4" name="file_4" type="file" class="file-input">
+                            <div id="preview-file_4" class="upload-div col-xs-12 col-md-12 text-center">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-xs-2 col-md-2">
+                    <div class="input-group form-control">
+                        <label class="input-group-btn col-xs-12 col-md-12">
+                            <input id="file_5" name="file_5" type="file" class="file-input">
+                            <div id="preview-file_5" class="upload-div col-xs-12 col-md-12 text-center">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-1">
+
+                </div>
+                <div class="col-xs-2">
+                    {% if flash.file_1_error %}<small class="text-danger">{{ flash.file_1_error | first}}</small>{% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {% if flash.file_2_error %}<small class="text-danger">{{ flash.file_2_error | first}}</small>{% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {% if flash.file_3_error %}<small class="text-danger">{{ flash.file_3_error | first}}</small>{% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {% if flash.file_4_error %}<small class="text-danger">{{ flash.file_4_error | first}}</small>{% endif %}
+                </div>
+                <div class="col-xs-2">
+                    {% if flash.file_5_error %}<small class="text-danger">{{ flash.file_5_error | first}}</small>{% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <input id="lat" name="lat" type="hidden" />
+                <input id="lon" name="lon" type="hidden" />
+            </div>
+            <div class="form-group">
+                <input class="form-control btn btn-primary" type="submit" name="submit" value="SignUp"/>
+            </div>
+            {{ csrf.field | raw }}
+        </form>
+    </div>
+    <div id="footer"></div>
+</body>
+<script src="{{ base_url() }}/jquery/jquery.min.js"></script>
+<script src="{{ base_url() }}/js/tag.js"></script>
+<script src="{{ base_url() }}/js/jquery.easy-autocomplete.min.js"></script>
+<script>
+    var options = {
+        data: {{ alltags|json_encode|raw }},
+        list: {
+            maxNumberOfElements: 10,
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $("#hobby").easyAutocomplete(options);
+
+    getLocation();
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+    }
+
+    function showPosition(position) {
+        $("#lat").val(position.coords.latitude);
+        $("#lon").val(position.coords.longitude);
+    }
+</script>
+</html>

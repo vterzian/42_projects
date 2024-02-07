@@ -1,0 +1,53 @@
+<!Doctype Html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ base_url() }}/css/layout.css" type="text/css"/>
+        <link rel="icon" type="image/png" href="{{ base_url() }}/img/logo.png" />
+        <title>Reset Password</title>
+    </head>
+    <body class="container-fluid">
+        <div id="header" class="row">
+            <div id="logo-wrap" class="col-xs-9">
+                <a href="{{ path_for('homeView') }}"><img src="{{ base_url() }}/img/logo.png" title="logo" alt="logo"/></a>
+            </div>
+            <div id="button-wrap" class="col-xs-3">
+            </div>
+        </div>
+        <div id="content" class="container">
+            <div id="flash">
+                {% if flash.success %}
+                    {% for message in flash.success %}
+                        <div class="alert alert-success galert col-sm-12">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if flash.danger %}
+                    {% for message in flash.danger %}
+                        <div class="alert alert-danger galert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="container col-xs-5" id="content">
+                <form action="{{ path_for('resetAction', {'username' : username, 'token' : token}) }}" method="POST">
+                    <div class="form-group">
+                        <label>New password</label>
+                        <input class="form-control" type="password" name="password" />
+                        {% if flash.password %}<small class="text-danger">{{ flash.password | first }}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm password</label>
+                        <input class="form-control" type="password" name="confirmation" />
+                        {% if flash.confirmation %}<small class="text-danger">{{ flash.confirmation | first }}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <input class="btn-primary btn form-control" type="submit" name="submit" value="Change password"/>
+                    </div>
+                    {{ csrf.field | raw }}
+                </form>
+            </div>
+        </div>
+        <div id="footer">
+        </div>
+    </body>
+    <script src="{{ base_url() }}/jquery/jquery.min.js"></script>
+</html>

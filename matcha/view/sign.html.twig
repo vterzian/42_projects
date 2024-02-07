@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ base_url() }}/css/sign.css" type="text/css">
+	<link rel="icon" type="image/png" href="{{ base_url() }}/img/logo.png" />
+	<title>Matcha - Sign</title>
+</head>
+<body>
+	<!-- header -->
+	<div id="header">
+		<div class="container">
+		{% if flash.success %}
+			{% for message in flash.success %}
+				<div class="alert alert-success galert col-sm-12">{{ message }}</div>
+			{% endfor %}
+		{% endif %}
+		{% if flash.danger %}
+			{% for message in flash.danger %}
+			<div class="alert alert-danger galert">{{ message }}</div>
+			{% endfor %}
+		{% endif %}
+		</div>
+	</div>
+
+	<!-- myModal -->
+	<div id="myModal" class="modal" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Password reinitialisation</h4>
+				</div><!-- /modal-header -->
+				<div class="modal-body">
+					<form action="/password-reset" method="POST">
+					<div class="form-group">
+					<input class="form-control" type="text" name="resetEmail" placeholder="Your email"/>
+					</div>
+					<div class="form-group">
+					<input class="form-control btn btn-primary" type="submit" value="Reset password" />
+					</div>
+					{{ csrf.field | raw }}
+					</form>
+				</div><!-- /modal-body -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div><!-- /modal-footer -->
+			</div><!-- /modal-content -->
+		</div><!-- /modal-dialog -->
+	</div><!-- /modal -->
+
+	<!-- body -->
+	<div id="body">
+		<div id="content" class="container">
+			<div id="sign_forms">
+				<div  class="row">
+					<div id="signin" class="col-md-5 mx-auto">
+						<h3>Login</h3>
+						{% if flash.log_error %}<span class="alert alert-danger">{{ flash.log_error | first}}</span>{% endif %}
+						<form action="{{ path_for('signin') }}" method="POST">
+							<div class="form-group">
+								<input type="text" class="form-control" name="sign_username" placeholder="Username" />
+								{% if flash.sign_username %}<small class="text-danger">{{ flash.sign_username | first}}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" name="sign_password" placeholder="Password" />
+								{% if flash.sign_password %}<small class="text-danger">{{ flash.sign_password | first}}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<label class="text-muted"><input type="checkbox" name="remember" /> Remember Me</label> - <a class="small" href="#" data-toggle="modal" data-target="#myModal">Forgot password?</a>
+							</div>
+							<div class="form-group">
+								<input type="submit" class="form-control btn btn-primary" name="submit" value="Connexion" />
+							</div>
+							{{ csrf.field | raw }}
+						</form>
+						<img id="logo" src="{{ base_url() }}/img/logo.png" alt="logo" title="logo" />
+					</div><!-- /col-md-5 -->
+					<div id="signUp" class="col-md-5">
+						<h3>Register</h3>
+						<form action="{{ path_for('signup') }}" method="POST">
+							<div class="form-group">
+								<input type="text" class="form-control" name="first_name" placeholder="First Name" value="{{ old.first_name }}" />
+								{% if flash.first_name %}<small class="text-danger">{{ flash.first_name | first}}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" name="last_name" placeholder="Last Name" value="{{ old.last_name }}"/>
+								{% if flash.last_name %}<small class="text-danger">{{ flash.last_name | first }}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" name="username" placeholder="Username" value="{{ old.username }}"/>
+								{% if flash.username %}<small class="text-danger">{{ flash.username | first }}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" name="email" placeholder="Email" value="{{ old.email }}"/>
+								{% if flash.email %}<small class="text-danger">{{ flash.email | first }}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" name="password" placeholder="Password" />
+								{% if flash.password %}<small class="text-danger">{{ flash.password | first }}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="password" class="form-control" name="confirmation" placeholder="Confirm Password" />
+								{% if flash.confirmation %}<small class="text-danger">{{ flash.confirmation | first }}</small>{% endif %}
+							</div>
+							<div class="form-group">
+								<input type="submit" class="form-control btn btn-primary" name="submit" value="Inscription" />
+							</div>
+							{{ csrf.field | raw }}
+						</form>
+					</div><!-- /col-md-5 -->
+				</div><!-- /row -->
+			</div><!-- /sign_forms -->
+		</div><!-- /container -->
+	</div><!-- /body -->
+	<div id="footer"></div>
+	<script src="{{ base_url() }}/jquery/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+</body>
+</html>

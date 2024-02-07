@@ -1,0 +1,292 @@
+<div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="modal-title" class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close dismiss-btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <form id="img-form" method="POST" action="/profile/{{ username }}/upd/profile" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="input-group form-control">
+                            <label class="input-group-btn col-xs-12">
+                                <input id="file" name="file_1" type="file" class="file-input">
+                                <div id="preview-file" class="upload-div col-md-12 text-center">
+                                    +
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    {{ csrf.field | raw }}
+                    <div class="form-group">
+                        <input class="form-control btn btn-primary" type="submit" name="submit" value="submit" />
+                    </div>
+                </form>
+                <form id="info-form" method="POST" action="/profile/{{ username }}/upd/info">
+                    <div class="form-group">
+                        <label>First name</label>
+                        <input type="text" class="form-control" name="first_name" value="{{ data.first_name | ucwords }}" />
+                        {% if flash.first_name %}<small class="text-danger">{{ flash.first_name | first}}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Last name</label>
+                        <input type="text" class="form-control" name="last_name" value="{{ data.last_name | ucwords}}" />
+                        {% if flash.last_name %}<small class="text-danger">{{ flash.last_name | first}}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" name="username" value="{{ data.username | ucwords }}" />
+                        {% if flash.username %}<small class="text-danger">{{ flash.username | first}}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label id="birthdate" class="col-md-12">Birthdate</label>
+                        <div class="birth-wrap">
+                            <select name="day" class="form-control">
+                                <option value="">Day</option>
+                                {% for i in 1..31 %}
+                                    <option {% if i == data.birthdate | day %} selected="selected" {% endif %}value="{{ i }}">
+                                        {% if i <= 9 %}
+                                            0{{ i }}
+                                        {% else %}
+                                            {{ i }}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if flash.day %}<small class="text-danger">{{ flash.day | first }}</small>{% endif %}
+                            {% if flash.birthdate %}<small class="text-danger">{{ flash.birthdate | first}}</small>{% endif %}
+                        </div>
+                        <div class="birth-wrap">
+                            <select name="month" class="form-control">
+                                <option value="">Month</option>
+                                {% for i in 1..12 %}
+                                    <option {% if i == data.birthdate | month %} selected="selected" {% endif %} value="{{ i }}">
+                                        {% if i <= 9 %}
+                                            0{{ i }}
+                                        {% else %}
+                                            {{ i }}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if flash.month %}<small class="text-danger">{{ flash.month | first }}</small>{% endif %}
+                        </div>
+                        <div class="birth-wrap">
+                            <select name="year" class="form-control">
+                                <option value="">Year</option>
+                                {% for i in 1940.."now" | date("Y") %}
+                                    <option {% if i == data.birthdate | year %} selected="selected" {% endif %} value="{{ i }}">
+                                        {% if i <= 9 %}
+                                            0{{ i }}
+                                        {% else %}
+                                            {{ i }}
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            {% if flash.year %}<small class="text-danger">{{ flash.year | first}}</small>{% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email" value="{{ data.email }}" />
+                        {% if flash.email %}<small class="text-danger">{{ flash.email | first}}</small>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender" name="gender" class="form-control">
+                            <option {% if data.gender == 1 %}selected="selected"{% endif %} value="1">Male</option>
+                            <option {% if data.gender == 2 %}selected="selected"{% endif %} value="2">Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Orientation</label>
+                        <select id="orientation" name="orient" class="form-control">
+                            <option {% if data.orientation == 1 %}selected="selected"{% endif %}value="1">Hetero</option>
+                            <option {% if data.orientation == 2 %}selected="selected"{% endif %}value="2">Homo</option>
+                            <option {% if data.orientation == 3 %}selected="selected"{% endif %}value="3">Bi</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>Country</label>
+                            <input class="form-control" type="text" name="country" value="{{ data.country | ucwords}}"/>
+                            {% if flash.country %}<small class="text-danger">{{ flash.country | first}}</small>{% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Region</label>
+                            <input class="form-control" type="text" name="state" value="{{ data.state | ucwords}}"/>
+                            {% if flash.state %}<small class="text-danger">{{ flash.state | first}}</small>{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>City</label>
+                            <input class="form-control" type="text" name="city" value="{{ data.city | ucwords }}"/>
+                            {% if flash.city %}<small class="text-danger">{{ flash.city | first}}</small>{% endif %}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>ZIP Code</label>
+                            <input class="form-control" type="text" name="zip" value="{{ data.zip }}"/>
+                            {% if flash.zip %}<small class="text-danger">{{ flash.zip | first}}</small>{% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="form-control btn-primary" name="submit" value="Submit" />
+                    </div>
+                    {{ csrf.field | raw }}
+                </form>
+                <form id="bio-form" method="POST" action="/profile/{{ username }}/upd/bio">
+                    <div class="form-group">
+                        <textarea id="bio-text" class="form-control" name="bio">{{ data.bio }}</textarea>
+                        {% if flash.bio %}<small class="text-danger">{{ flash.bio | first}}</small>{% endif %}
+                    </div>
+                    {{ csrf.field | raw }}
+                    <div class="form-group">
+                        <input type="submit" class="form-control btn btn-primary" name="submit" value="Submit"/>
+                    </div>
+                </form>
+                <form id="tag-form" method="POST" action="/profile/{{ username }}/upd/tag">
+                    <div class="form-group">
+                        <label for="hobby">Hobbies</label>
+                        <div id="tag-ticket-wrap" class="col-xs-12 col-md-12">{% for t in tag %}<span class="tag_wrap" contenteditable="false"><span>{{ t | ucwords }}</span><a>x</a></span>{% endfor %}</div>
+                        <input type="text" id="hobby" class="col-xs-12 col-md-12 input form-control" />
+                        <input id="tag" type="hidden" name="tag" value="{% for t in tag %}{{ t }}{{ ',' }}{% endfor %}"/>
+                        {% if flash.tag %}<small class="text-danger">{{ flash.tag | first}}</small>{% endif %}
+                    </div>
+                    {{ csrf.field | raw }}
+                    <div class="form-group">
+                        <input type="submit" class="form-control btn btn-primary" name="submit" value="Submit"/>
+                    </div>
+                </form>
+            {% for i in 2..5 %}
+                <form id="file_{{ i }}-form" method="POST" action="/profile/{{ username }}/upd/img" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="input-group form-control">
+                            <label class="input-group-btn col-md-12">
+                                <input id="file_{{ i }}" name="file_{{ i }}" type="file" class="file-input">
+                                <div id="preview-file_{{ i }}" class="upload-div col-md-12 text-center">
+                                    +
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    {{ csrf.field | raw }}
+                    <div class="form-group">
+                        <input class="form-control btn btn-primary" type="submit" name="submit" value="submit" />
+                    </div>
+                </form>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <img src="" id="imagepreview" class="pagination-centered" />
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="viewmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="view-history" class="col-md-12">
+                    <h5>Views history</h5>
+                    {% if lastView is empty %}
+                        <div class="nobody-wrap">
+                            <p class="nobody-mess text-muted">Nobody saw your profile.</p>
+                        </div>
+                    {% else %}
+                        {% for v in lastView %}
+                            <div class="col-md-12 ticket">
+                                <div class="row">
+                                    <div class="profile-img col-md-4" style="background: url('{{ base_url() }}/img/user/{{ v.file_1 }}')"></div>
+                                    <div class="col-md-8">
+                                        <p class="username">{{ v.username | ucwords }}</p>
+                                        <p class="age">{{ v.birthdate | age }}</p>
+                                        <p class="from">{{ v.country | ucwords }} <br/>{{ v.city | ucwords}} {{ v.zip | ucwords }}</p>
+                                    </div>
+                                    <div class="gender">
+                                        <img id="gender-img" src="{{ base_url() }}/img/{% if v.gender == 1 %}male.png{% elseif v.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/><br />
+                                    </div>
+                                    <div class="orient">
+                                        {% if (v.gender == 1 and v.orientation == 1) or (v.gender == 2 and v.orientation == 2) %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                        {% elseif (v.gender == 1 and v.orientation == 2) or (v.gender == 2 and v.orientation == 1) %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                        {% elseif v.orientation == 3 %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                        {% endif %}
+                                    </div>
+                                    <a class="profile-link" href="/profile/{{ v.username }}"></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="likemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="likes-history" class="col-md-12">
+                    <h5>Likes history</h5>
+                    {% if lastLike is empty %}
+                        <div class="nobody-wrap">
+                            <p class="nobody-mess text-muted">Nobody liked your profile.</p>
+                        </div>
+                    {% else %}
+                        {% for l in lastLike %}
+                            <div class="col-md-12 ticket">
+                                <div class="row">
+                                    <div class="profile-img col-md-4" style="background: url('{{ base_url() }}/img/user/{{ l.file_1 }}')"></div>
+                                    <div class="col-md-8">
+                                        <p class="username">{{ l.username | ucwords }}</p>
+                                        <p class="age">{{ l.birthdate | age }}</p>
+                                        <p class="from">{{ l.country | ucwords }} <br/>{{ l.city | ucwords}} {{ l.zip | ucwords }}</p>
+                                    </div>
+                                    <div class="gender">
+                                        <img id="gender-img" src="{{ base_url() }}/img/{% if l.gender == 1 %}male.png{% elseif l.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/><br />
+                                    </div>
+                                    <div class="orient">
+                                        {% if (l.gender == 1 and l.orientation == 1) or (l.gender == 2 and l.orientation == 2) %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                        {% elseif (l.gender == 1 and l.orientation == 2) or (l.gender == 2 and l.orientation == 1) %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                        {% elseif l.orientation == 3 %}
+                                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                        {% endif %}
+                                    </div>
+                                    <a class="profile-link" href="/profile/{{ l.username }}"></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

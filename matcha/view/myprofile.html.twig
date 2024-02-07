@@ -1,0 +1,189 @@
+{% extends "layout.html.twig" %}
+
+{% block css %}profile.css{% endblock %}
+{% block title %}{{ username }} - Profile{% endblock %}
+
+{% block content %}
+    {% include 'include/profile-modal.html.twig' %}
+    <div id="profile-header">
+        <div id="phead" class="col-xs-12 row">
+            <div id="img-wrap" class="pen-hover col-xs-4">
+                <a class="icon" id="pen-profile" data-toggle="modal" data-target="#exampleModal"><img src="{{ base_url() }}/img/pencil.png" /></a>
+                <img src="{{ base_url() }}/img/user/{{ data.file_1 }}" class="col-xs-12 click-img" alt="profile-img" title="profile-img" />
+            </div>
+            <div id="info-wrap" class="pen-hover col-xs-4">
+                <a class="icon"><img src="{{ base_url() }}/img/pencil.png" /></a>
+                <div>{{ data.first_name | ucwords }} {{ data.last_name | ucwords }}</div>
+                <div>{{ data.username | ucwords}}</div>
+                <div>{{ data.email }}</div>
+                <div>{{ data.birthdate | age }} years</div>
+                <div>{{ data.country | ucwords }}, {{ data.state | ucwords }}</div>
+                <div>{{ data.city | ucwords }}, {{ data.zip }}</div>
+                <div> <span id="gender-wrap">
+                        <img id="gender-img" src="{{ base_url() }}/img/{% if data.gender == 1 %}male.png{% elseif data.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/>
+                    </span>
+                    seeking
+                    <span id="orient-wrap">
+                        {% if (data.gender == 1 and data.orientation == 1) or (data.gender == 2 and data.orientation == 2) %}
+                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                        {% elseif (data.gender == 1 and data.orientation == 2) or (data.gender == 2 and data.orientation == 1) %}
+                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                        {% elseif data.orientation == 3 %}
+                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div id="score-wrap" class="col-xs-3">
+                {{ data.score }}
+            </div>
+            <form class="col-md-3" action="/password-reset" method="POST">
+                <div class="form-group">
+                    <input type="hidden" name="resetEmail" value="{{ data.email }}">
+                </div>
+                <div class="form-group">
+                    <button id="resetButton" class="btn btn-default form-control">Password Reinitialisation</button>
+                </div>
+                {{ csrf.field | raw }}
+            </form>
+        </div>
+        <div id="bio-wrap" class="pen-hover row col-xs-12">
+            <a id="pen-bio" class="icon"><img src="{{ base_url() }}/img/pencil.png" /></a>
+            <strong class="text-muted col-xs-2">About me:</strong><br />
+            <span class="col-xs-9">{{ data.bio }}</span>
+        </div>
+        <div id="tag-wrap" class="pen-hover row col-xs-12">
+            <a id="pen-tag" class="icon"><img src="{{ base_url() }}/img/pencil.png" /></a>
+            <strong class="text-muted col-xs-2 ">What I like:</strong>
+            <div id="tag-container">
+                {% for t in tag %}
+                    <span class="tag-box">{{ t | ucwords }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row history">
+            <div id="view-history" class="col-xs-6">
+                <h5 id="view-title">Views history</h5>
+                {% if lastView is empty %}
+                    <div class="nobody-wrap">
+                        <p class="nobody-mess text-muted">Nobody saw your profile.</p>
+                    </div>
+                {% else %}
+                    {% for v in lastView | slice(0, 3) %}
+                        <div class="col-xs-12 ticket">
+                            <div class="row">
+                                <div class="profile-img col-xs-4" style="background: url('{{ base_url() }}/img/user/{{ v.file_1 }}')"></div>
+                                <div class="col-xs-8">
+                                    <p class="username">{{ v.username | ucwords }}</p>
+                                    <p class="age">{{ v.birthdate | age }}</p>
+                                    <p class="from">{{ v.country | ucwords }} <br/>{{ v.city | ucwords}} {{ v.zip | ucwords }}</p>
+                                </div>
+                                <div class="gender">
+                                    <img id="gender-img" src="{{ base_url() }}/img/{% if v.gender == 1 %}male.png{% elseif v.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/><br />
+                                </div>
+                                <div class="orient">
+                                    {% if (v.gender == 1 and v.orientation == 1) or (v.gender == 2 and v.orientation == 2) %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                    {% elseif (v.gender == 1 and v.orientation == 2) or (v.gender == 2 and v.orientation == 1) %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                    {% elseif v.orientation == 3 %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                        <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                    {% endif %}
+                                </div>
+                                <a class="profile-link" href="/profile/{{ v.username }}"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div id="likes-history" class="col-xs-6">
+                <h5 id="like-title">Likes history</h5>
+                {% if lastLike is empty %}
+                    <div class="nobody-wrap">
+                        <p class="nobody-mess text-muted">Nobody liked your profile.</p>
+                    </div>
+                {% else %}
+                    {% for l in lastLike | slice(0, 3) %}
+                        <div class="col-xs-12 ticket">
+                            <div class="row">
+                                <div class="profile-img col-xs-4" style="background: url('{{ base_url() }}/img/user/{{ l.file_1 }}')"></div>
+                                <div class="col-xs-8">
+                                    <p class="username">{{ l.username | ucwords }}</p>
+                                    <p class="age">{{ l.birthdate | age }}</p>
+                                    <p class="from">{{ l.country | ucwords }} <br/>{{ l.city | ucwords}} {{ l.zip | ucwords }}</p>
+                                </div>
+                                <div class="gender">
+                                    <img id="gender-img" src="{{ base_url() }}/img/{% if l.gender == 1 %}male.png{% elseif l.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/><br />
+                                </div>
+                                <div class="orient">
+                                    {% if (l.gender == 1 and l.orientation == 1) or (l.gender == 2 and l.orientation == 2) %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                    {% elseif (l.gender == 1 and l.orientation == 2) or (l.gender == 2 and l.orientation == 1) %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                    {% elseif l.orientation == 3 %}
+                                        <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                        <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                                    {% endif %}
+                                </div>
+                                <a class="profile-link" href="/profile/{{ l.username }}"></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div id="profile-images" class="row">
+        {% for i in 2..5 %}
+            {% if attribute(data,'file_' ~ i) %}
+                <div id="file_{{ i }}-wrap" class="img-container col-xs-3 pen-hover">
+                    <img src="{{ base_url() }}/img/user/{{ attribute(data,'file_' ~ i) }}" class="col-xs-12 click-img" alt="img" title="img" />
+                    <a class="icon pen-icon" id="pen-file_{{ i }}" data-toggle="modal" data-target="#exampleModal"><img src="{{ base_url() }}/img/pencil.png" /></a>
+                </div>
+            {% else %}
+                <form id="form_file_{{ i }}" class="col-xs-3" method="POST" action="/profile/{{ username }}/insert/img" enctype="multipart/form-data">
+                    <div class="form-group text-center">
+                        <label class="col-xs-12">
+                            <input class="upload-input" type="file" name="file_{{ i }}" />
+                            <div class="fake-upload form-control col-xs-12">
+                                +
+                            </div>
+                        </label>
+                    </div>
+                    {{ csrf.field | raw }}
+                </form>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="{{ base_url() }}/js/myprofile.js"></script>
+    <script src="{{ base_url() }}/js/tag.js"></script>
+    <script src="{{ base_url() }}/js/profile.js"></script>
+    <script src="{{ base_url() }}/js/jquery.easy-autocomplete.min.js"></script>
+    <script>
+        var options = {
+            data: {{ alltags|json_encode|raw }},
+            list: {
+                maxNumberOfElements: 10,
+                match: {
+                    enabled: true
+                }
+            }
+        };
+
+        $("#hobby").easyAutocomplete(options);
+
+        if ($("#info-form .form-group small").hasClass('text-danger')) {
+            $("#myModal").modal('show');
+            $("#info-form").show();
+        } else if ($("#bio-form .form-group small").hasClass('text-danger')) {
+            $("#myModal").modal('show');
+            $("#bio-form").show();
+        }
+    </script>
+{% endblock %}

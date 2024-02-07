@@ -1,0 +1,113 @@
+body
+{
+    background: url('../img/background.jpg') fixed bottom center no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#header
+{
+    height: 7vh;
+}
+
+#footer
+{
+    height: 7vh;
+}
+
+#content
+{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 2px 2px 10px #5d5d5d;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px;
+}
+
+.btn-default
+{
+    background: #efefef;
+    border-radius: 4px 0 0 4px;
+    border: 1px solid #ccc;
+}
+
+.file-list .form-control *, .file-list .form-control
+{
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+}
+
+.upload-div
+{
+    display: inline-block;
+    font-size: 50px;
+    padding: 15px!important;
+    background-size: cover;
+    background-position: center center;
+}
+
+.upload-div:hover
+{
+    color: #0275d8;
+}
+
+.input-group-btn input
+{
+    display: none;
+}
+
+.input
+{
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    background-color: white;
+    background-color: -moz-field;
+}
+
+.tag_wrap
+{
+    background: #0275d8;
+    display: inline-block;
+    border: 1px solid #028bff;
+    border-radius: 2px;
+    color: #FFF;
+    margin : 5px 5px;
+}
+
+.tag_wrap span
+{
+    padding: 0 6px;
+}
+
+.tag_wrap a
+{
+    padding: 0 5px;
+    border-left: 1px solid #028bff;
+    font-weight: bolder;
+    cursor: pointer;
+}
+
+.birth-wrap, #birth-container
+{
+    padding: 0;
+}
+
+.birth-wrap select
+{
+    width: 95%!important;
+}
+
+.block
+{
+    display: block!important;
+    padding: 0;
+}
+
+#tag-ticket-wrap
+{
+    padding: 0;
+    margin-bottom: 5px;
+}

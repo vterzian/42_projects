@@ -1,0 +1,115 @@
+{% extends "layout.html.twig" %}
+
+{% block css %}profile.css{% endblock %}
+{% block title %}{{ username }} - Profile{% endblock %}
+
+{% block content %}
+    <div class="modal" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <img class="pagination-centered" src="" id="imagepreview" class="col-xs-12" >
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="profile-header">
+        <div id="phead" class="col-xs-12 row">
+            <div id="img-wrap" class="col-xs-4">
+                <img src="{{ base_url() }}/img/user/{{ data.file_1 }}" class="col-xs-12 click-img" alt="profile-img" title="profile-img" />
+            </div>
+            <div id="info-wrap" class="col-xs-4">
+                <div>{{ data.first_name | ucwords }} {{ data.last_name | ucwords }}</div>
+                <div id="username">{{ data.username | ucwords }}</div>
+                <div>{{ data.birthdate | age }} years</div>
+                <div>{{ data.country | ucwords}} {{ data.state | ucwords }}</div>
+                <div>{{ data.city | ucwords }} {{ data.zip }}</div>
+                <div> <span id="gender-wrap">
+                        <img id="gender-img" src="{{ base_url() }}/img/{% if data.gender == 1 %}male.png{% elseif data.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/>
+                    </span>
+                     seeking
+                    <span id="orient-wrap">
+                        {% if (data.gender == 1 and data.orientation == 1) or (data.gender == 2 and data.orientation == 2) %}
+                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                        {% elseif (data.gender == 1 and data.orientation == 2) or (data.gender == 2 and data.orientation == 1) %}
+                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                        {% elseif data.orientation == 3 %}
+                            <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                            <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div id="score-wrap" class="visible-md visible-lg visible-xl col-md-3">
+                {{ data.score }}
+            </div>
+            <div id="action-wrap">
+                <div id="connected-wrap">
+                    {% if connected == 0 %}
+                        <span><img src="{{ base_url() }}/img/disconnected.png" /> {{ lastConnection | lastConnection }} ago</span>
+                    {% else %}
+                        <span><img src="{{ base_url() }}/img/connected.png" />Connected</span>
+                    {% endif %}
+                </div>
+                <div id="like-wrap">
+                    {% if like == 0 %}
+                        <a id="like" href="#"><img src="{{ base_url() }}/img/star2.png"><span>Like It !</span></a>
+                    {% else %}
+                        <a id="like" href="#"><img src="{{ base_url() }}/img/star.png"><span>Unlike It !</span></a>
+                    {% endif %}
+                </div>
+                <div id="fake-wrap">
+                    {% if fake == 0 %}
+                        <a id="fake" href="#"><img src="{{ base_url() }}/img/fake2.png" /><span>Fake !</span></a>
+                    {% else %}
+                        <a id="fake" href="#"><img src="{{ base_url() }}/img/fake.png" /><span>Unfake !</span></a>
+                    {% endif %}
+                </div>
+                <div id="block-wrap">
+                    {% if block == 0 %}
+                        <a id="block" href="#"><img src="{{ base_url() }}/img/block2.png"><span>Block !</span></a>
+                    {% else %}
+                        <a id="block" href="#"><img src="{{ base_url() }}/img/block.png"><span>Unblock !</span></a>
+                    {% endif %}
+                </div>
+                <div>
+                    {% if uconnected == 1 %}
+                        <p>connected with you !</p>
+                    {% elseif likeu == 1 %}
+                        <p>{{ username | ucwords }} like you !</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div id="bio-wrap" class="row col-xs-12">
+            <strong class="text-muted col-xs-2">About me:</strong><br />
+            <span class="col-xs-10">{{ data.bio }}</span>
+        </div>
+        <div id="tag-wrap" class="row col-xs-12">
+            <strong class="text-muted col-xs-2 ">What I like:</strong>
+            {% for t in tag %}
+                <span class="tag-box">{{ t | ucwords }}</span>
+            {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div id="profile-images" class="row">
+        {% for i in 2..5 %}
+            {% if attribute(data,'file_' ~ i) %}
+                <img src="{{ base_url() }}/img/user/{{ attribute(data,'file_' ~ i) }}" class="col-xs-3 click-img" alt="img" title="img" />
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="{{ base_url() }}/js/profile.js"></script>
+    <script>
+        actionButton();
+    </script>
+{% endblock %}

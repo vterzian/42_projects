@@ -1,0 +1,89 @@
+.ticket
+{
+    padding: 5px;
+}
+
+.ticket .row
+{
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+    padding: 0;
+    box-shadow: 3px 3px 5px #EFEFEF;
+    background: #fff;
+    position: relative;
+    margin: 0;
+}
+
+.profile-img
+{
+    background-position: center center!important;
+    background-size: cover!important;
+    border-right: 1px solid #d5d5d5;
+    max-width: 100%;
+    min-height: 110px;
+}
+
+.gender
+{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+
+.orient
+{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.gender img, .orient img
+{
+    height: 25px;
+    width: 25px;
+}
+
+.profile-link
+{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
+
+#search-form
+{
+    padding: 20px;
+    background: #FFFFFF;
+    border: 1px solid #d5d5d5;
+    box-shadow: 3px 3px 5px #EFEFEF;
+    margin-bottom: 25px;
+}
+
+#search-form .form-group
+{
+    margin: 7px 0;
+}
+
+.no-match
+{
+    border: 1px solid #d5d5d5;
+    padding: 20px;
+    background: #FFF;
+    font-weight: bolder;
+
+}
+
+.large
+{
+    width: 50px!important;
+}
+
+.from, .age, .username {
+    white-space: nowrap!important;
+    overflow: hidden!important;
+    max-width: 75%!important;
+}

@@ -1,0 +1,139 @@
+<!Doctype Html>
+<html>
+    <head>
+    {% block head %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ base_url() }}/css/{% block css %}{% endblock %}" type="text/css">
+        <link rel="stylesheet" href="{{ base_url() }}/css/layout.css" type="text/css"/>
+        <link rel="icon" type="image/png" href="{{ base_url() }}/img/logo.png" />
+        <link rel="stylesheet" href="{{ base_url() }}/css/easy-autocomplete.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}/css/easy-autocomplete.themes.min.css">
+        <title>{% block title %}{% endblock %}</title>
+    {%  endblock %}
+    </head>
+    <body class="container-fluid">
+
+    <div class="modal" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="chat-modal-title"></h3>
+                    <button type="button" class="close dismiss-btn" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="chat-modal-body">
+                    <div id="conv"></div>
+                    <div class="form-group">
+                        <input id="chat-input" class="form-control" type="text" maxlength="255"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="header" class="row">
+            <div id="logo-wrap" class="col-xs-7 row">
+                <a href="{{ path_for('homeView') }}" class="col-md-1 col-xs-2"><img src="{{ base_url() }}/img/logo.png" title="logo" alt="logo"/></a>
+                <a id="burger-wrap" class="col-md-1 col-xs-2">
+                    <div id="burger1" class="burger"></div>
+                    <div id="burger2" class="burger"></div>
+                    <div id="burger3" class="burger"></div>
+                    <div id="icon-new-message" class="text-center">0</div>
+                </a>
+                <a href="{{ path_for('searchView') }}" id="search-icon" class="glyphicon glyphicon-search col-md-9 col-xs-7"></a>
+            </div>
+            <div id="button-wrap" class="col-xs-5">
+                <a href="{{ path_for('profile', {'username': head_name }) }}" class="col-xs-8">{{ head_name | ucwords }}</a>
+                <a id="logout" class="btn btn-primary col-xs-4" href="{{ path_for('logOut') }}">Log out</a>
+            </div>
+        </div>
+        <div id="side-menu">
+            <audio id="notif-sound">
+                <source src="{{ base_url() }}/sound/sound.mp3" type="audio/mpeg"/>
+            </audio>
+            <div id="notif-wrap">
+                <div class="notif-title">
+                    <h3>Notifications <span id="notif-count">0</span></h3>
+                </div>
+                <hr />
+                <div id="notif-ticket-wrap">
+                    {% if notif is empty %}
+                        <p>No notification yet !</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="chat-wrap">
+                <h3>Chat</h3>
+                <hr />
+                <div class="chat-ticket-wrap">
+                    {% if connectedWith is empty %}
+                        <p>No connection yet !</p>
+                    {% else %}
+                        {% for c in connectedWith %}
+                            <div class="chat-ticket">
+                                <span class="chat-ticket-img" style="background: url('{{ base_url() }}/img/user/{{ c.file_1 }}') center"></span>
+                                <span class="ticket-username">{{ c.username | ucwords }}</span>
+                                <span class="new-message"></span>
+                                {% if c.online == 1 %}
+                                    <img class="connect-img" src="{{ base_url() }}/img/connected.png" alt="" title="" />
+                                {% elseif c.online == 0 %}
+                                    <img class="connect-img" src="{{ base_url() }}/img/disconnected.png" alt="" title="" />
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div id="content" class="container">
+            <div id="flash">
+                {% if flash.success %}
+                    {% for message in flash.success %}
+                        <div class="alert alert-success galert col-sm-12">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if flash.danger %}
+                    {% for message in flash.danger %}
+                        <div class="alert alert-danger galert">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+        <div id="footer">
+            {% block footer %}{% endblock %}
+        </div>
+    </body>
+    {% block js %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="{{ base_url() }}/js/layout.js"></script>
+        <script src="{{ base_url() }}/js/stillalive.js"></script>
+        <script src="{{ base_url() }}/js/chat.js"></script>
+        <script id="chat-ticket-template" type="text/template">
+            <div class="chat-ticket">
+                <span class="chat-ticket-img" style="background: url('{{ base_url() }}/img/user/{ file_1 }') center"></span>
+                <span class="ticket-username">{ username }</span>
+                <span class="new-message { show }">{ nbrMess }</span>
+                <img class="connect-img" src="{{ base_url() }}/img/{ img }" alt="" title="" />
+                </div>
+        </script>
+        <script id="notif-template" type="text/template">
+            <div class="row col-xs-12 notif-ticket { color }">
+                <div class="hidden">{ id }</div>
+                <div class="col-xs-2 notif-img" style="background: url('{{ base_url() }}/img/user/{ img }')"></div>
+                <div class="col-xs-7 notif-content">{ content }</div>
+                <div class="col-xs-3 notif-date">{ date }</div>
+            </div>
+        </script>
+        <script>
+            $(document).ready(function () {
+                stillConnect();
+                newMessage();
+                getNotif();
+            });
+        </script>
+    {% endblock %}
+</html>

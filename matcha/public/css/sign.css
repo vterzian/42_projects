@@ -1,0 +1,58 @@
+body
+{
+    background: url('../img/background.jpg') fixed bottom center no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#logo
+{
+    margin: 0 auto;
+    width: 90%;
+    display: block;
+}
+
+#sign_forms
+{
+    margin-top: 20vh;
+}
+
+#signin, #signUp
+{
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 2px 2px 10px #5d5d5d;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px;
+}
+
+.galert {
+    position: relative;
+    top: 50px;
+    margin: 0 auto;
+    z-index: 100;
+}
+
+#logo
+{
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+}
+
+.alert
+{
+    display:block;
+}
+
+@media (max-width: 767px) {
+    #sign_forms
+    {
+        margin-top: 5vh;
+    }
+}
+
+
+

@@ -1,0 +1,153 @@
+{% extends "layout.html.twig" %}
+
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+{% endblock %}
+{% block css %}search.css{% endblock %}
+{% block title %} Search {% endblock %}
+
+{% block content %}
+    <h2 class="text-center">Search !</h2>
+    <div id="search-form">
+        <form action="#" method="POST">
+            <div class="form-row">
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-12 no-padding">Age</label>
+                    <select id="minAge" name="minAge" class="searchInput selectpicker col-xs-5 no-padding">
+                        <option value="">-- Min age</option>
+                        {% for i in 18..90 %}
+                            {% if param.minAge == i %}
+                                <option value="{{ i }}" selected>{{ i }}</option>
+                            {% else %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <select id="maxAge" name="maxAge" class="searchInput selectpicker col-xs-5 no-padding">
+                        <option value="">-- Max age</option>
+                        {% for i in 18..90 %}
+                            {% if param.maxAge == i %}
+                                <option value="{{ i }}" selected>{{ i }}</option>
+                            {% else %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-12 no-padding">Location</label>
+                    <div class="form-group col-xs-12 no-padding">
+                        <input id="location" name="location" type="text" class="searchInput form-control" placeholder="ex: Paris..." value="{{ param.location }}"/>
+                    </div>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-12 no-padding">Score</label>
+                    <select id="minScore" name="minScore" class="searchInput selectpicker col-xs-5 no-padding">
+                        <option value="">-- Min score</option>
+                        {% for i in 1..100 %}
+                            {% if param.minScore == i %}
+                                <option value="{{ i }}" selected>{{ i }}</option>
+                            {% else %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <select id="maxScore" name="maxScore" class="searchInput selectpicker col-xs-5 no-padding">
+                        <option value="">-- Max score</option>
+                        {% for i in 1..100 %}
+                            {% if param.maxScore == i %}
+                                <option value="{{ i }}" selected>{{ i }}</option>
+                            {% else %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-xs-6">
+                    <label class="col-xs-12 no-padding">Tags</label>
+                    <select id="tags" name="tags[]" class="searchInput selectpicker col-xs-12 no-padding" data-live-search="true" multiple data-max-options="5" multiple>
+                        {% for t in tags %}
+                            {% if t.id in param.tags %}
+                                <option value="{{ t.id }}" data-tokens="{{ t.name }}" selected>{{ t.name | ucwords }}</option>
+                            {% else %}
+                                <option value="{{ t.id }}" data-tokens="{{ t.name }}">{{ t.name | ucwords }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                {{ csrf.field | raw }}
+                <div class="clearfix"></div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="form-group col-xs-3">
+            <strong>Sort by: </strong>
+            <select id="sortBy" class="form-control">
+                <option class="text-muted">-- Sort by</option>
+                <option>Popularity</option>
+                <option>Localisation</option>
+                <option>Age</option>
+                <option>Commun tags</option>
+            </select>
+        </div>
+    </div>
+    <div id="match-container">
+        {% if match is empty %}
+            <p class="text-center no-match">No matches</p>
+        {% else %}
+            {% for m in match %}
+                <div class="col-xs-12 col-md-4 ticket">
+                    <div class="row">
+                        <div class="profile-img col-xs-4" style="background: url('{{ base_url() }}/img/user/{{ m.file_1 }}')"></div>
+                        <div class="col-xs-8">
+                            <p class="username">{{ m.username | ucwords }}</p>
+                            <p class="age">{{ m.birthdate|age }}</p>
+                            <p class="from">{{ m.country | ucwords }} <br/>{{ m.city | ucwords}} {{ m.zip | ucwords }}</p>
+                        </div>
+                        <div class="gender">
+                            <img id="gender-img" src="{{ base_url() }}/img/{% if m.gender == 1 %}male.png{% elseif m.gender == 2%}female.png{% endif %}" alt="gender" title="gender"/><br />
+                        </div>
+                        <div class="orient">
+                            {% if (m.gender == 1 and m.orientation == 1) or (m.gender == 2 and m.orientation == 2) %}
+                                <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                            {% elseif (m.gender == 1 and m.orientation == 2) or (m.gender == 2 and m.orientation == 1) %}
+                                <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                            {% elseif m.orientation == 3 %}
+                                <img id="orient-img" src="{{ base_url() }}/img/male.png" alt="orientation" title="orientation"/>
+                                <img id="orient-img" src="{{ base_url() }}/img/female.png" alt="orientation" title="orientation"/>
+                            {% endif %}
+                        </div>
+                        <a class="profile-link" href="/profile/{{ m.username }}"></a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    {{ parent() }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="{{ base_url() }}/js/search.js"></script>
+    <script id="ticket-template" type="text/template">
+        <div class="col-xs-12 col-md-4 ticket">
+            <div class="row">
+                <div class="profile-img col-xs-4" style="background: url('{{ base_url }}/img/user/{ file_1 }"></div>
+                <div class="col-xs-8">
+                    <p class="username">{ username }</p>
+                    <p class="age">{ age }</p>
+                    <p class="from">{ from }</p>
+                </div>
+                <div class="gender">
+                    <img id="gender-img" src="{{ base_url() }}/img/{ gender }" alt="gender" title="gender"/><br />
+                </div>
+                <div class="orient">
+                    <img id="orient-img" class="{ col-md }" src="{{ base_url() }}/img/{ orient }" alt="orientation" title="orientation"/>
+                </div>
+                <a class="profile-link" href="{{ base_url() }}/profile/{ username }"></a>
+            </div>
+        </div>
+    </script>
+{% endblock %}

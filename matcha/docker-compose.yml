@@ -1,0 +1,36 @@
+php:
+    build: .
+    container_name: matcha-php
+    dockerfile: docker/php/Dockerfile
+    volumes:
+        - .:/var/www/html
+    links:
+        - mysql
+        - maildev
+
+nginx:
+    build: .
+    container_name: matcha-nginx
+    dockerfile: docker/nginx/Dockerfile
+    links:
+        - php
+    ports:
+        - 8080:443
+    volumes:
+        - .:/var/www/html
+
+mysql:
+    build: .
+    container_name: matcha-mysql
+    dockerfile: docker/mysql/Dockerfile
+    environment:
+        MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+        MYSQL_DATABASE: "matcha"
+    ports:
+        - 3306:3306
+
+maildev:
+    image: djfarrelly/maildev
+    ports:
+        - 1080:80
+        - 1025:25
